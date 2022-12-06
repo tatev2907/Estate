@@ -1,9 +1,10 @@
 plugins {
     id 'java'
     id 'war'
+    id 'org.hidetake.swagger.generator' version '2.19.2'
 }
 
-group 'com.estate'
+group 'com.exalt.estate'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -20,7 +21,6 @@ targetCompatibility = '1.8'
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
-
 dependencies {
     compileOnly('javax.xml.ws:jaxws-api:2.3.1')
     compileOnly('javax.jws:javax.jws-api:1.1')
@@ -38,7 +38,6 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     testImplementation 'org.mockito:mockito-core:2.1.0'
 }
-
 test {
     useJUnitPlatform()
 }
