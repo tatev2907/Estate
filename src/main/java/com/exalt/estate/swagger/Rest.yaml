@@ -1,0 +1,260 @@
+openapi: 3.0.3
+info:
+  title: Rest Estate Service
+  description: Estate
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080/Estate-1.0-SNAPSHOT/api/estate'
+tags:
+  - name : Owner
+    description : Everything about Owners
+  - name: Property
+  - name: Transaction
+paths:
+  /updateOwner/{userName} :
+    put:
+      tags:
+        - Owner
+      summary: Update an existing owner
+      description: Update an existing owner by username
+      operationId: updatePet
+      parameters:
+        - name: userName
+          in: path
+          description: Username of owner that need to be updated
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent Owner in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Owner'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+          '404':
+            description: Owner not found
+          $ref: '#/components/schemas/Owner'
+          security:
+            - petstore_auth:
+                - write:owners
+                - read:owners
+  /createOwner :
+    post:
+      tags:
+        - Owner
+      summary: Create owner
+      operationId: createOwner
+      requestBody:
+        description: Created owner object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Owner'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Owner'
+        '409':
+          description: Owner with this username already exists
+  /deleteOwner/{userName}:
+    delete:
+      tags:
+        - Owner
+      summary: Delete owner
+      operationId: deleteOwner
+      parameters:
+        - name: userName
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '404':
+          description: Owner not found
+  /getOwners:
+    get:
+      tags:
+        - Owner
+      summary: Finds Owners
+      operationId: getOwners
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Owner'
+
+  /createProperty:
+    post:
+      tags:
+        - Property
+      summary: Create property
+      operationId: createProperty
+      requestBody:
+        description: Created property object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Property'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+        '404':
+          description: Owner with this username not found
+  /properties/{id}:
+    get:
+      tags:
+        - Property
+      summary: Get an existing property
+      description: Get an existing property by id
+      operationId: getProperty
+      parameters:
+        - name: id
+          in: path
+          description: Id of property
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+          '404':
+            description: Property not found
+          $ref: '#/components/schemas/Property'
+  /allProperties:
+    get:
+      tags:
+        - Property
+      summary: Finds Properties
+      operationId: getAllProperties
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Property'
+  /deleteProperty/{id}:
+    delete:
+      tags:
+        - Property
+      summary: Delete property
+      operationId: deleteProperty
+      parameters:
+        - name: id
+          in: path
+          description: The id that needs to be deleted
+          required: true
+          schema:
+            type: number
+      responses:
+        '404':
+          description: Property not found
+
+  /getAllTransactions:
+    get:
+      tags:
+        - Transaction
+      summary: Finds Transactions
+      operationId: getAllTransactions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+components:
+  schemas:
+    Owner:
+      type: object
+      properties:
+        userName:
+          type: string
+          example: theUser
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: James
+        balance:
+          type: number
+          example: 1000
+    Property:
+      properties:
+        address:
+          type: string
+          example: Yerevan
+        propertyOwner:
+          type: string
+          example: user1
+        cost:
+          type: number
+          example: 1000
+    Transaction:
+      properties:
+        date:
+          type: string
+          example: 2022-12-07 15:12:10.694
+        seller:
+          type: string
+          example: user1
+        buyer:
+          type: string
+          example: user2
+        property:
+          type: number
+          example: 1
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+  requestBodies:
+    Owner:
+      description: Owner object that needs to be added to the DB
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Owner'
+    UserArray:
+      description: List of Owners object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Owner'
